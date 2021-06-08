@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio D&D</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Odibee+Sans&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+    <div id="game">
+        <div class="box box-players d-flex">
+    
+            <div class="player">
+                <h2> {{ player }}</h2>
+                <div class="life-bar">
+                    <div class="life-bar-high" 
+                    :class="{low: playerLife < 20}" 
+                    :style="{'width': `${playerLife}%`}"></div>
+                </div>
+                <h4 class="life-percentage">{{ playerLife }}%</h4>
+            </div>
+    
+            <div class="player npc">
+                <h2>{{ npc }}</h2>
+                <div class="life-bar">
+                <div class="life-bar-high"
+                :class="{low: monsterLife < 20}" 
+                :style="{'width': `${monsterLife}%`}"></div>
+            </div>
+                <h4 class="life-percentage">{{ monsterLife }}%</h4>
+            </div>
+        </div>
+
+        <div class="box box-controls d-flex" v-if="monsterLife > 0 && playerLife > 0">
+            <template v-if="!status">
+                <button class="btn-control bg-blue text-white" @click="status = !status">INICIAR JOGO</button>
+            </template>
+            <template v-else>
+                <ul>
+                    <button @click="ataque(false)" class="btn-control bg-red text-white">
+                        <li>ATAQUE</li>
+                    </button>
+                    <button @click="ataque(true)" class="btn-control bg-yellow text-black">
+                        <li>ATAQUE ESPECIAL</li>
+                    </button>
+                    <button @click="causarDanoECurar" class="btn-control bg-green text-white">
+                        <li>CURAR</li>
+                    </button>
+                    <button @click="reiniciarJogo" class="btn-control bg-grey text-black">
+                        <li>DESISTIR</li>
+                    </button>
+                </ul>
+            </template>
+        </div>
+
+        <div class="box box-controls d-flex" v-else-if="playerLife > 0 && monsterLife <= 0">
+            <h1>VOCÊ VENCEU!</h1>
+        </div>
+        <div class="box box-controls d-flex" v-else>
+            <h1>VOCÊ PERDEU!</h1>
+        </div>
+
+        <div class="box box-log">
+            <template v-if="logs.length === 0" ></template>
+            <template v-else class="log d-flex" v-for="(log,id) in logs">
+                <p class="bg-blue text-white" v-if="id % 2 === 0">{{log}}</p>
+                <p class="bg-red text-white" v-else>{{log}}</p>
+            </template>
+            <template v-if="logs.length === 0" ></template>
+        </div>
+    </div>
+</body>
+<script src="app.js"></script>
+</html>
